@@ -72,6 +72,6 @@ Still this is an AI-programming competition and I think this just pushes me to p
 
 :thumbsup: Thanks again Agade, pb4, Magus, reCurse for the amazing contest! Can't wait to see what comes of the next one :slight_smile: 
 
-####P.S. *Some blatant advertising* :stuck_out_tongue: 
+#### P.S. *Some blatant advertising* :stuck_out_tongue: 
 
 The annual [battlecode](https://www.battlecode.org) competition will be running in January next year. It's a RTS-styled bot programming tournament (think programming a StarCraft II AI player). Feel free to join me while we wait for the next contest :smiley: hehe.
