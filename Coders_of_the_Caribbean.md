@@ -1,3 +1,5 @@
+## [Contest Multiplayer Link](https://www.codingame.com/multiplayer/bot-programming/coders-of-the-caribbean)
+
 By now many of you would've been aware of my 'code-sharing’ scandal :/ 
 
 Maybe I was simply careless in using a public git repo or perhaps I'm naive enough to think people won't abandon their morals for a tshirt zzz If the shirt is really all you want (and not what went into earning it), just drop me a message and I'll make sure to send the next shirt I win to your address...

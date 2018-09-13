@@ -1,8 +1,10 @@
+## [Contest Multiplayer Link](https://www.codingame.com/multiplayer/bot-programming/code-of-kutulu)
+
 Hello fellow codingamers! Ended up **#25** with a simulation approach in Python3 :stuck_out_tongue:
 
 First off, congratulations to the community team JohnnyYuge, Nmahoude, and EulerscheZahl (Toad_of_Kutulu haha) for another great contest I really enjoyed! Stunning performance by Blasterpoard in his first contest as well, holding pole position for most of the contest! :clap: 
 
-##Kutulu
+## Kutulu
 
 I enjoy games with discrete movement (grids) and no collisions!!! (phew) Meanmax/FantasticBits were a headache unfortunately. CodeRoyale had a much better handling of collisions (resolving up to a finite 5 sets of collisions via discrete movements in 0.2 frames). This left me much more time to explore decision strategies rather than coding boilerplate code for physics simulations...
 
@@ -10,9 +12,9 @@ Seems like EulerscheZahl ranked right above me at #24 running 1ms on c#. A 50x s
 
 Movement using UP, RIGHT, DOWN, LEFT should be explicitly stated in the rules. I only found this one out by watching replays. Rules should be kept up-to-date with any changes/errors (Slasher state transition from SPAWNING->RUSHING immediately caused quite some confusion but wasn't updated in the rules).
 
-##My Strategy
+## My Strategy
 
-###Scoring Moves
+### Scoring Moves
 As many of you have pointed out, the initial Wood1 boss was *really* strong... In past contests, rushing a simple heuristic would get me past into Bronze but in this contest I had to compute Wanderers' next move and search to depth 1 movement before getting promoted. In the end, this code got me into Silver as well (this bot was around top50 when Silver opened).
 
 I assumed all wanderers move towards me (pessimistic) and scored adjacent cells, picking the highest scoring to travel in. If I can afford to WAIT, use some delicious spaghetti to decide which skill to use.
@@ -23,7 +25,7 @@ Unlike past contests where I had to really dig into the referee code, the rules 
 
 Overall I found the simulation to be much easier to implement than in recent contests.
 
-###Optimizations
+### Optimizations
 
 Python3 is obviously slow, so to prevent myself from using too much time calculating the paths of wanderer/slashers, I instead ran a BFS from each valid cell to exhaustion, recording which cell it propagated from, then flipped that direction and stored it in a huge dictionary. Something I picked up doing Battlecode :stuck_out_tongue: 
 
@@ -40,7 +42,7 @@ Another  optimization was to precompute all valid adjacent directions on each ce
 
 I still computed Slasher LoS cells every turn tho, should've precomputed as well! (realized this after reading MSmits PM)
 
-###A*Star (or BFS with pq and heuristics)
+### A*Star (or BFS with pq and heuristics)
 
 I was inspired by the A*Star search after searching around and finding this nifty tutorial on [maze pathing](http://bryukh.com/labyrinth-algorithms/). It seemed to me that we have a pretty straightforward fit for this game into A*Star pathing. Instead of a distance heuristic, we optimize for length of survival and end sanity score.
 
@@ -86,7 +88,7 @@ Still, this approach resulted in many nice strategies my bot will use to prolong
 
 Slashers were I feel, a fresher kind of minion than the classic baddie chasing you around.
 
-##Contest Analysis
+## Contest Analysis
 
 I wasn't around for Hypersonic (and for most of MeanMax) so this was my first contest other than 1v1, and boy was it fun :smiley: Loved the competitive co-operation aspect of the game but yes, this introduced much randomness to both games and ladder scoring. Many games are lost by a wrong turn (away from everyone else) at a junction and this was pretty frustrating to deal with... The increased number of players also meant an increase in time taken for games to be played and towards the end it was taking ~1hr for 50% games on submits, meaning I couldn't test my code as much as I liked to.
 

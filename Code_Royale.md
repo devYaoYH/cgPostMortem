@@ -1,3 +1,5 @@
+## [Contest Multiplayer Link](https://www.codingame.com/multiplayer/bot-programming/code-royale)
+
 Hello CG!
 
 **#55 Legend** What a fun contest! :smiley: 

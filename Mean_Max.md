@@ -1,3 +1,5 @@
+## [Contest Multiplayer Link](https://www.codingame.com/multiplayer/bot-programming/mean-max)
+
 # Mean Physics
 
 Great job to the creators of the first (of many I hope) community contests! :smiley: Really well executed contest with interesting mechanics.
