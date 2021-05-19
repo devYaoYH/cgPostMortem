@@ -68,6 +68,7 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
         while(len(action_pq) > 0):
             if (time.time() - init_t > t_left):
                 timeout = True
+                break
             current_state, cur_actions = heappop(action_pq)
             if (actions_depth > cur_actions): # Beam Pruning here over actions instead
                 continue
@@ -75,12 +76,12 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
                 actions_depth += 1
                 expanded_nodes = 0
             expanded_nodes += 1
-            # ... Search Node update, visited etc... Same as before #
+            # ... Generate actions, update visited etc... Same as before #
             # Layers are now for each depth of actions instead of day as before
             # Make sure to push into the correct pq (day_pq on WAIT, action_pq otherwise)
     return v[sorted(last_layer, key=lambda s: playout(s), reverse=True)[0]] # highest-scoring
 ```
 
-That's it! Can't help but be slightly disappointed I didn't work this out during the contest time and lost \~40 positions due to this inappropriate application of the beam over entire DAYS instead of ACTIONS.
+That's it! Can't help but be slightly disappointed I didn't work this out during contest time and lost \~40 positions due to this inappropriate application of the beam over entire DAYS instead of ACTIONS.
 
 *note* We still have comparator for State object sort by actions then tie-break with evaluation function. This allows for the single pq within each day over multiple action depths, otherwise, we would require a new pq each layer which might be faster still since we avoid popping out the excess pruned nodes...
