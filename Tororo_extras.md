@@ -44,3 +44,40 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
 ## Mistake...
 
 However, we note that the deferred actions will only come from the `k` and `k+1` actions taken during day `d` where `k` is the **full-width BFS** action depth we break at once we hit our large beam constraint. I think this was my major mistake not noting that it thereby limited me to only a few actions-deep each day... Too wide but not deep enough :/
+
+### Fix (#90 -> top #50)
+
+A relatively simple fix is to restart our search at each day and constrain the beam over each action layer instead. Applying this fix results in a huge performance jump up to top 50 from the roughly top 100 final contest submission...
+
+Fix for the above-described search:
+```python
+def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.07):
+    init_t, timeout = time.time(), False
+    search_layer, last_layer = [], []
+    day_pq, v = [(init_state, 0)], {}
+    actions_depth, expanded_nodes, day = 0, 0, init_state.day
+    for d in range(day, min(24, day+max_depth)): # Depth limited by DAYS still
+        if (timeout):
+            break
+        action_pq = [] # Restart with a fresh pq for each day
+        # Push in our actions accumulated from previous day
+        while(len(day_pq) > 0 and len(action_pq) < beam):
+            heappush(action_pq, heappop(day_pq))
+        while(len(action_pq) > 0):
+            if (time.time() - init_t > t_left):
+                timeout = True
+            current_state, cur_actions = heappop(action_pq)
+            if (expanded_nodes > beam): # Move onto next layer of actions, skip remaining nodes
+                actions_depth += 1
+                expanded_nodes = 0;
+            if (actions_depth > cur_actions): # Beam Pruning here over actions instead
+                continue
+            expanded_nodes += 1;
+            # ... Search Node update, visited etc... Same as before #
+            # Layers are now for each depth of actions instead of day as before
+    return v[sorted(last_layer, key=lambda s: playout(s), reverse=True)[0]] # highest-scoring
+```
+
+That's it! Can't help but be slightly disappointed I didn't work this out during the contest time and lost \~40 positions due to this inappropriate application of the beam over entire DAYS instead of ACTIONS.
+
+*note* We still have comparator for State object sort by actions then tie-break with evaluation function. This allows for the single pq within each day over multiple action depths, otherwise, we would require a new pq each layer which might be faster still since we avoid popping out the excess pruned nodes...
