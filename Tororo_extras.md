@@ -23,14 +23,14 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
         current_state, cur_depth = heappop(pq)
         if (cur_depth > max_depth):
             break
-        if (len(search_layer) >= beam or search_depth < cur_depth): # We stepped into a new day
-            last_layer = search_layer   # Swap & store this layer
-            search_layer = []
-            search_depth += 1
         if (search_depth > cur_depth):
             # defer this node into next day (if still have budget within small actions 'beam')
             # after adding a WAIT action on top of it
             continue
+        if (len(search_layer) >= beam or search_depth < cur_depth): # We stepped into a new day
+            last_layer = search_layer   # Swap & store this layer
+            search_layer = []
+            search_depth += 1
         search_layer.append(current_state)
         for action, state in generate_action(current_state): # Expand this node
             # ... Typical BFS Algo stuff ... #
@@ -49,7 +49,7 @@ However, we note that the deferred actions will only come from the `k` and `k+1`
 
 A relatively simple fix is to restart our search at each day and constrain the beam over each action layer instead. Applying this fix results in a huge performance jump up to top 50 from the roughly top 100 final contest submission...
 
-Fix for the above-described search:
+Fix for the above-described search (once again, just a rough sketch):
 ```python
 def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.07):
     init_t, timeout = time.time(), False
@@ -60,6 +60,7 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
         if (timeout):
             break
         action_pq = [] # Restart with a fresh pq for each day
+        actions_depth = 0
         # Push in our actions accumulated from previous day
         while(len(day_pq) > 0 and len(action_pq) < beam):
             heappush(action_pq, heappop(day_pq))
@@ -67,14 +68,15 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
             if (time.time() - init_t > t_left):
                 timeout = True
             current_state, cur_actions = heappop(action_pq)
-            if (expanded_nodes > beam): # Move onto next layer of actions, skip remaining nodes
-                actions_depth += 1
-                expanded_nodes = 0;
             if (actions_depth > cur_actions): # Beam Pruning here over actions instead
                 continue
-            expanded_nodes += 1;
+            if (expanded_nodes > beam): # Move onto next layer of actions, skip remaining nodes
+                actions_depth += 1
+                expanded_nodes = 0
+            expanded_nodes += 1
             # ... Search Node update, visited etc... Same as before #
             # Layers are now for each depth of actions instead of day as before
+            # Make sure to push into the correct pq (day_pq on WAIT, action_pq otherwise)
     return v[sorted(last_layer, key=lambda s: playout(s), reverse=True)[0]] # highest-scoring
 ```
 
