@@ -59,8 +59,8 @@ def simul(init_state, playout=s_playout_static, max_depth=5, beam=100, t_left=0.
     for d in range(day, min(24, day+max_depth)): # Depth limited by DAYS still
         if (timeout):
             break
-        action_pq = []  # Restart with a fresh pq for each day
-        actions_depth = 0
+        # Restart with a fresh pq for each day
+        action_pq, actions_depth, expanded_nodes = [], 0, 0
         # Push in our actions accumulated from previous day
         while(len(day_pq) > 0 and len(action_pq) < beam):
             heappush(action_pq, heappop(day_pq))
